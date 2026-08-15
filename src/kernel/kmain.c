@@ -1,26 +1,19 @@
-#include <kernel/drivers/video.h>
+#include <kernel/kdefs.h>
+#include <kernel/drivers/vga.h>
+#include <kernel/mem.h>
 
-struct vga_cursor      cursor;
-struct vga_framebuffer fb;
+struct vga_cursor cursor;
 
 void kmain(void)
 {
-        if (video_vga_fb_init(&fb) < 0)
-        {
-                /**
-                 * I'm still going to find out
-                 * what to do in case this fails
-                 */
-                return;
-        }
+        vga_init();
+        vga_cursor_move(5, 5);
 
-        video_vga_fb_write_string
-                (&fb,
-                 cursor,
-                 "Hello world!\n",
-                 VGA_COLOR_LIGHT_GREY,
-                 VGA_COLOR_BLACK);
+        const char *s = "Hello world!";
+        uint16 si[12];
+        memsetb(si, 0, sizeof(si));
 
-        video_vga_fb_swap(&fb);
+        vga_atos(s, 12, si);
+
+        vga_putstream(si, 12);
 }
-

@@ -15,6 +15,7 @@ ASM_OBJECTS := $(patsubst %.s, $(BUILD_DIR)/%.o, $(ASM_SOURCE))
 all: $(BIN_DIR)/kernel.elf
 
 $(BIN_DIR)/kernel.elf: $(C_OBJECTS) $(ASM_OBJECTS)
+	@mkdir -p $(dir $@)
 	ld $(LD_FLAGS) $^ -o $@
 
 os.iso: $(BIN_DIR)/kernel.elf
@@ -33,7 +34,7 @@ run: os.iso
 	qemu-system-x86_64 -boot d -cdrom os.iso
 
 clean:
-	rm -rf *.o $(BIN_DIR)/kernel.elf os.iso
+	rm -rf *.o $(BIN_DIR) $(BUILD_DIR)
 
 # GENERIC
 $(BUILD_DIR)/%.o: %.s

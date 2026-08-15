@@ -1,12 +1,19 @@
 #ifndef __INCLUDE_IO_H
 #define __INCLUDE_IO_H
 
-#define FRAMEBUFFER_COMMAND_PORT 0x3D4
-#define FRAMEBUFFER_DATA_PORT    0x3D5
+#include "kdefs.h"
 
-#define FRAMEBUFFER_HIGH_BYTE_COMMAND 14
-#define FRAMEBUFFER_LOW_BYTE_COMMAND  15
+/**
+ * Portas I/O
+ */
+#define CRTC_CTL_PORT         0x3D4
+#define CRTC_DATA_PORT        0x3D5
+#define CRTC_HIGH_BYTE_REG    0x0E
+#define CRTC_LOW_BYTE_REG     0x0F
 
-void outb(unsigned short port, unsigned char data);
+#define CRTC_CURSOR_START_REG   0x0A
+
+extern void outb(uint16 port, uchar data);
+extern uint8 inb(uint16 port);
 
 #endif
