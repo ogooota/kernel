@@ -85,8 +85,8 @@ void vga_cursor_move(const uint16 x, const uint16 y)
         /**
          * Atualizar x e y do cursor
          */
-        cursor.x   = x;
-        cursor.y   = y;
+        cursor.x = x;
+        cursor.y = y;
 }
 
 void vga_putcell(const uint16 cell)
@@ -106,10 +106,12 @@ void vga_putstream(const uint16 *stream, const uint32 size)
                 return;
         }
 
-        uint16 x = cursor.x;
-        uint16 y = cursor.y;
+        uint8 x = cursor.x;
+        uint8 y = cursor.y;
 
-        if ((y * VGA_WIDTH + x) + size >= VGA_AREA)
+        uint16 abs = y * VGA_WIDTH + x;
+
+        if (abs + size >= VGA_AREA)
         {
                 /**
                  * TODO: Decidir o que fazer quando o texto
@@ -124,8 +126,7 @@ void vga_putstream(const uint16 *stream, const uint32 size)
 
         for (uint16 i = 0; i < size; i++)
         {
-          uint16 pos = y * VGA_WIDTH + x + i;
-          vga_putcell_abs(stream[i], pos);
+                vga_putcell_abs(stream[i], abs + i);
         }
 }
 
@@ -139,7 +140,7 @@ void vga_cursor_init(struct vga_cursor *cursor)
         memsetb(cursor, 0, sizeof(*cursor));
 }
 
-void vga_atos(const char *s, uint32 size, uint16 *out)
+void vga_atos(const char *s, const uint32 size, uint16 *out)
 {
         if (s   == NULL ||
             out == NULL)
@@ -151,4 +152,9 @@ void vga_atos(const char *s, uint32 size, uint16 *out)
         {
                 out[i] = vga_mkcell(s[i], VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
         }
+}
+
+void vga_flush(const uint16 *stream)
+{
+        vmemcpyw(vmem, stream, VGA_AREA);
 }

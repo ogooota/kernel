@@ -4,8 +4,16 @@
 #include <kernel/core/kdefs.h>
 
 #define VGA_ADDR   0x000B8000
+
+/**
+ *      Representar width e height com uint8
+ */
 #define VGA_WIDTH  80
 #define VGA_HEIGHT 25
+
+/**
+ *      Representar area com uint16
+ */
 #define VGA_AREA   (VGA_WIDTH * VGA_HEIGHT)
 
 enum vga_color
@@ -38,13 +46,15 @@ void vga_putstream(const uint16 *stream, const uint32 size);
 
 struct vga_cursor
 {
-        uint16 x;
-        uint16 y;
+        uint8 x;
+        uint8 y;
 };
 
 void vga_cursor_init(struct vga_cursor *cursor);
 void vga_cursor_move(const uint16 x, const uint16 y);
 
-void vga_atos(const char *s, uint32 size, uint16 *out);
+void vga_atos(const char *s, const uint32 size, uint16 *out);
+
+void vga_flush(const uint16 *stream);
 
 #endif

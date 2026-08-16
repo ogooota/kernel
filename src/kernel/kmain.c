@@ -4,8 +4,7 @@
 #include <kernel/drivers/video/vga.h>
 #include <kernel/drivers/video/video.h>
 
-struct vidbuf     fb;
-struct vga_cursor cursor;
+struct vidbuf fb;
 
 void kmain(void)
 {
@@ -13,10 +12,10 @@ void kmain(void)
 
         const char *s = "Hello world!";
         uint32 size   = strlen(s);
-        uint16 xpos   = (VGA_WIDTH / 2) - (size / 2);
-        uint16 ypos   = VGA_HEIGHT / 2;
+        uint8 xpos    = (VGA_WIDTH / 2) - (size / 2);
+        uint8 ypos    = VGA_HEIGHT / 2;
 
-        vga_cursor_move(xpos, ypos);
+        vidbuf_puts(&fb, "Hello world!", xpos, ypos);
 
-        vidbuf_puts(&fb, "Hello world!");
+        vga_flush(fb.data);
 }

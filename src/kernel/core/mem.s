@@ -2,6 +2,7 @@
 global memsetb
 global memsetw
 global vmemsetw
+global vmemcpyw
 
 section .text
 
@@ -17,11 +18,18 @@ section .text
 ;; em __dst__.
 ;;
 memsetb:
-        mov edi, [esp + 4]
-        mov al,  [esp + 8]
-        mov ecx, [esp + 12]
+        push edi
+
+        mov edi, [esp + 8]
+
+        mov eax, [esp + 12]
+        and eax, 0xFF ;; Zera todos os bytes menos o último
+
+        mov ecx, [esp + 16]
 
         rep stosb
+
+        pop edi
 
         ret
 ;;
@@ -36,11 +44,18 @@ memsetb:
 ;; em __dst__.
 ;;
 memsetw:
-        mov edi, [esp + 4]
-        mov ax,  [esp + 8]
-        mov ecx, [esp + 12]
+        push edi
+
+        mov edi, [esp + 8]
+
+        mov eax, [esp + 12]
+        and eax, 0xFFFF ;; Zera todas as words menos a última
+
+        mov ecx, [esp + 16]
 
         rep stosw
+
+        pop edi
 
         ret
 
@@ -56,11 +71,37 @@ memsetw:
 ;; em __dst__, sendo __dst__ um ponteiro
 ;; para memória volátil.
 ;;
+;; A diferença entre 'vmemsetw' e 'memsetw' é
+;; apenas na declaração contida em 'mem.h',
+;; por isso é executado apenas um pulo para
+;; 'memsetw'.
+;;
 vmemsetw:
-        mov edi, [esp + 4]
-        mov ax,  [esp + 8]
-        mov ecx, [esp + 12]
+        jmp memsetw
 
-        rep stosw
+
+;;
+;; Offsets:
+;; {
+;;      [esp + 12] = uint32      n
+;;      [esp + 8]  = const void *src
+;;      [esp + 4]  = void       *dst
+;; }
+;;
+;; Copia __n__ words de __src__ para __dst__,
+;; sendo __dst__ um ponteiro para memória volátil.
+;;
+vmemcpyw:
+        push edi
+        push esi
+
+        mov esi, [esp + 16]
+        mov edi, [esp + 12]
+        mov ecx, [esp + 20]
+
+        rep movsw
+
+        pop esi
+        pop edi
 
         ret

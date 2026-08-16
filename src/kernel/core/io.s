@@ -1,7 +1,6 @@
 
 
 global outb
-
 global inb
 
 ;;
