@@ -1,21 +1,17 @@
-#include <kernel/core/kdefs.h>
-#include <kernel/core/mem.h>
-#include <kernel/core/string.h>
-#include <kernel/drivers/video/vga.h>
 #include <kernel/drivers/video/video.h>
+#include <kernel/utils/print.h>
 
-struct vidbuf fb;
+void kinit(void)
+{
+        vidinit();
+}
 
 void kmain(void)
 {
-        vidbuf_init(&fb);
+        kinit();
 
-        const char *s = "Hello world!";
-        uint32 size   = strlen(s);
-        uint8 xpos    = (VGA_WIDTH / 2) - (size / 2);
-        uint8 ypos    = VGA_HEIGHT / 2;
+        const char *fmt = "formatted strings!";
+        printk("Hey! Now I can print %s\n", fmt);
 
-        vidbuf_puts(&fb, "Hello world!", xpos, ypos);
-
-        vga_flush(fb.data);
+        viddump();
 }

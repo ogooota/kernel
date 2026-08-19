@@ -1,51 +1,58 @@
 #include "video.h"
+#include "vga.h"
 
-#include <kernel/core/mem.h>
 #include <kernel/core/string.h>
+#include <kernel/core/mem.h>
 
-void vidbuf_init(struct vidbuf *fb)
+struct vidcsr
 {
-        if (fb == NULL)
-        {
-                return;
-        }
+        uint8 x;
+        uint8 y;
+};
 
-        fb->w = VGA_WIDTH;
-        fb->h = VGA_HEIGHT;
+unsigned char vdata[VGA_AREA];
+struct vidcsr csr;
 
+void vidinit()
+{
+        memsetb(vdata, 0, sizeof(vdata));
+        vidcsrmv(0, 0);
         vga_init();
 }
 
-void vidbuf_putc(struct vidbuf *fb, const char c, const uint8 x, const uint8 y)
+void vidcsrmv(const uint8 x, const uint8 y)
 {
-        if (fb == NULL      ||
-            x  >= VGA_WIDTH ||
-            y  >= VGA_HEIGHT)
+        csr.x = x;
+        csr.y = y;
+}
+
+void vidputc(const char c)
+{
+        if (c == '\n' || c == '\r')
         {
+                vidcsrmv(0, csr.y + 1);
                 return;
         }
 
-        uint16 cell = vga_mkcell(c, VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
-        uint16 abs  = y * VGA_WIDTH + x;
+        vdata[csr.y * VGA_WIDTH + csr.x] = c;
 
-        fb->data[abs] = cell;
+        csr.x++;
+        if (csr.x > VGA_WIDTH)
+        {
+                vidcsrmv(0, csr.y + 1);
+        }
 }
 
-void vidbuf_puts(struct vidbuf *fb, const char *s, const uint8 x, const uint8 y)
+void vidputs(const char *s)
 {
-        if (fb == NULL      ||
-            s  == NULL      ||
-            x  >= VGA_WIDTH ||
-            y  >= VGA_HEIGHT)
+        while (*s)
         {
-                return;
-        }
-
-        uint32 len = strlen(s);
-
-        for (uint32 i = 0; i < len; i++)
-        {
-                vidbuf_putc(fb, s[i], x + i, y);
+                vidputc(*s);
+                s++;
         }
 }
 
+void viddump()
+{
+        vga_flush();
+}

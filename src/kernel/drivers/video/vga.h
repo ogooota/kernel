@@ -55,6 +55,6 @@ void vga_cursor_move(const uint16 x, const uint16 y);
 
 void vga_atos(const char *s, const uint32 size, uint16 *out);
 
-void vga_flush(const uint16 *stream);
+void vga_flush();
 
 #endif

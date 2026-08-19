@@ -6,6 +6,8 @@
 static volatile uint16 *vmem = (volatile uint16 *)VGA_ADDR;
 static struct vga_cursor cursor;
 
+extern unsigned char vdata[VGA_AREA];
+
 uint16 vga_mkcell(const uchar c, enum vga_color fg, enum vga_color bg)
 {
         /**
@@ -111,7 +113,7 @@ void vga_putstream(const uint16 *stream, const uint32 size)
 
         uint16 abs = y * VGA_WIDTH + x;
 
-        if (abs + size >= VGA_AREA)
+        if (abs + size > VGA_AREA)
         {
                 /**
                  * TODO: Decidir o que fazer quando o texto
@@ -154,7 +156,31 @@ void vga_atos(const char *s, const uint32 size, uint16 *out)
         }
 }
 
-void vga_flush(const uint16 *stream)
+void vga_flush()
 {
-        vmemcpyw(vmem, stream, VGA_AREA);
+        uint16 convdata[VGA_AREA];
+        memsetb(convdata, 0, sizeof(convdata));
+
+        for (uint16 i = 0; i < VGA_AREA; i++)
+        {
+                convdata[i] = vga_mkcell(vdata[i], VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
+        }
+
+        vmemcpyw(vmem, convdata, VGA_AREA);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
