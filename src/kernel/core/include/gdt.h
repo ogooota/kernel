@@ -124,7 +124,7 @@ void gdt_dsadd
  uint8       n,
  uint32      base,
  uint32      lim,
- uint8       dpl,
- uint8       gran);
+ uint8       access,
+ uint8       flags);
 
 #endif
