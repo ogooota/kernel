@@ -26,5 +26,5 @@ void gdt_dsadd
         ds->base_56_63 = (base >> 24) & 0xFF;
 
         ds->access_byte = access;
-        ds->flags_52_55 = flags;
+        ds->flags_52_55 = flags & 0x0F;
 }
