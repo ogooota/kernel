@@ -11,8 +11,6 @@
 #define CRTC_HIGH_BYTE_REG    0x0E
 #define CRTC_LOW_BYTE_REG     0x0F
 
-#define CRTC_CURSOR_START_REG   0x0A
-
 extern void outb(uint16 port, uchar data);
 extern uint8 inb(uint16 port);
 

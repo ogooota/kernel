@@ -26,4 +26,8 @@ _Static_assert(sizeof(int32) == 4, "i32 expected to be 4 bytes");
 #define EOF 0
 #endif
 
+#ifndef _packed
+#define _packed __attribute__((packed))
+#endif
+
 #endif

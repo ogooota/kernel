@@ -4,26 +4,39 @@ SECTIONS
 {
         . = 0x00100000;
 
-        .text ALIGN (0x1000) :
+        PROVIDE(__kernel_start = .);
+
+        .text ALIGN (4K) :
         {
                 *(.text)
         }
 
-        .rodata ALIGN (0x1000) :
+        PROVIDE(etext = .);
+
+        .rodata ALIGN (4K) :
         {
                 *(.rodata*)
         }
 
-        .data ALIGN (0x1000) :
+        PROVIDE(data = .);
+
+        .data ALIGN (4K) :
         {
                 *(.data)
         }
 
-        .bss ALIGN (0x1000) :
+        PROVIDE(edata = .);
+
+        .bss ALIGN (4K) :
         {
                 *(COMMON*)
                 *(.bss)
         }
 
-        endkernel = .;
+        PROVIDE(__kernel_end = .);
+
+        /DISCARD/ :
+        {
+                *(.eh_frame .note.GNU-stack)
+        }
 }

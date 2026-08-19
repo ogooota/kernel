@@ -17,8 +17,7 @@ int vsprintf(char *out, const char *fmt, va_list args)
         {
                 if (*p != '%')
                 {
-                        *str = *p;
-                        str++;
+                        *str++ = *p;
                         continue;
                 }
 
@@ -35,8 +34,7 @@ int vsprintf(char *out, const char *fmt, va_list args)
                          * Preservando só o último byte do char
                          */
                         char c = (char)(va_arg(args, int) & 0xff);
-                        *str = c;
-                        str++;
+                        *str++ = c;
                 } break;
 
                 case 's':
@@ -44,22 +42,18 @@ int vsprintf(char *out, const char *fmt, va_list args)
                         char *s = va_arg(args, char *);
                         while (*s)
                         {
-                                *str = *s;
-                                str++;
-                                s++;
+                                *str++ = *s++;
                         }
                 } break;
 
                 case 'd':
                 {
                         int i = va_arg(args, int);
-                        itoa(str, i);
-                        str++;
+                        itoa(str++, i);
                 } break;
 
                 default:
-                        *str = *p;
-                        str++;
+                        *str++ = *p;
                         break;
                 }
         }
