@@ -113,10 +113,25 @@ struct gdt_segdesc
  */
 #define MAXDS 24
 
+/**
+ * Bytes de acesso
+ */
+#define KERNEL_CS_ACCESS 0x9A
+#define KERNEL_DS_ACCESS 0x92
+#define USER_CS_ACCESS   0xFA
+#define USER_DS_ACCESS   0xF2
+#define TSS_ACCESS       0x89
+
 struct gdt
 {
         struct gdt_segdesc ds[MAXDS];
-        uint8 ds_amt;
+        uint8              ds_amt;
+} _packed;
+
+struct gdtr
+{
+        uint16 limit;
+        uint32 base;
 } _packed;
 
 void gdt_dsadd
@@ -126,5 +141,9 @@ void gdt_dsadd
  uint32      lim,
  uint8       access,
  uint8       flags);
+
+void gdt_init(struct gdt *table);
+
+extern void gdt_load();
 
 #endif

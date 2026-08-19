@@ -1,8 +1,8 @@
 #include "video.h"
 #include "vga.h"
 
-#include <kernel/core/string.h>
-#include <kernel/core/mem.h>
+#include <kernel/core/include/string.h>
+#include <kernel/core/include/mem.h>
 
 struct vidcsr
 {
@@ -47,8 +47,7 @@ void vidputs(const char *s)
 {
         while (*s)
         {
-                vidputc(*s);
-                s++;
+                vidputc(*s++);
         }
 }
 

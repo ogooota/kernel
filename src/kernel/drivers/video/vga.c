@@ -1,7 +1,7 @@
 #include "vga.h"
 
-#include <kernel/core/mem.h>
-#include <kernel/core/io.h>
+#include <kernel/core/include/mem.h>
+#include <kernel/core/include/io.h>
 
 static volatile uint16 *vmem = (volatile uint16 *)VGA_ADDR;
 static struct vga_cursor cursor;

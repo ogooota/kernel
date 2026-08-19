@@ -1,9 +1,9 @@
 #ifndef __VGA_H
 #define __VGA_H
 
-#include <kernel/core/kdefs.h>
+#include <kernel/core/include/kdefs.h>
 
-#define VGA_ADDR   0x000B8000
+#define VGA_ADDR 0x000B8000
 
 /**
  *      Representar width e height com uint8

@@ -1,6 +1,7 @@
 #include "varargs.h"
 #include "utils.h"
 
+#include <kernel/core/include/mem.h>
 #include <kernel/drivers/video/video.h>
 
 int vsprintf(char *out, const char *fmt, va_list args)
@@ -52,8 +53,55 @@ int vsprintf(char *out, const char *fmt, va_list args)
                         itoa(str++, i);
                 } break;
 
+                case 'x':
+                {
+                        char buf[10];
+                        memsetb(buf, 0, sizeof(buf));
+
+                        buf[0] = '0';
+                        buf[1] = 'x';
+
+                        int x = va_arg(args, int);
+                        itox(buf + 2, x);
+
+                        char *p = buf;
+
+                        while (*p)
+                        {
+                                *str++ = *p++;
+                        }
+                } break;
+
+                case 'X':
+                {
+                        char buf[10];
+                        memsetb(buf, 0, sizeof(buf));
+
+                        buf[0] = '0';
+                        buf[1] = 'X';
+
+                        int x = va_arg(args, int);
+                        itox(buf + 2, x);
+
+                        char *p = buf;
+                        
+                        while (*p)
+                        {
+                                *str++ = (*p >= 97 && *p <= 122) ? UPPERCASE(*p++) : *p++;
+
+                                // if (*p >= 97 && *p <= 122)
+                                // {
+                                //         *str++ = UPPERCASE(*p++);
+                                // }
+                                // else
+                                // {
+                                //         *str++ = *p++;
+                                // }
+                        }
+                } break;
+
                 default:
-                        *str++ = *p;
+                        *str++ = *p++;
                         break;
                 }
         }
