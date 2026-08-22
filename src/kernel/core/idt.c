@@ -2,6 +2,7 @@
 #include "include/isr.h"
 
 #include <kernel/utils/print.h>
+#include <kernel/drivers/video/video.h>
 
 #define MAXENTRIES 256
 
@@ -41,10 +42,24 @@ void idt_init()
         idt_load(&pidt);
 }
 
+static void panic()
+{
+        printk("\nKERNEL PANIC\n");
+
+        viddump();
+
+        while (1)
+        {
+                asm volatile("hlt");
+        }
+}
+
 void print_exception(struct regs *registers)
 {
         printk("INTERRUPTION NUMBER: %d\n"
                "ERROR CODE:          %d\n",
                registers->intno,
-               registers->errcode);
+               registers->errcode ? registers->errcode : 0);
+
+        panic();
 }

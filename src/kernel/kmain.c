@@ -8,8 +8,6 @@ void kinit(void)
         vidinit();
         gdt_init();
         idt_init();
-        gdt_show_desc(3);
-        gdt_show_desc(4);
 }
 
 void kmain(void)
@@ -18,6 +16,11 @@ void kmain(void)
 
         printk("After GDT\n");
         printk("After IDT\n");
+
+        viddump();
+
+        // asm volatile("ud2");
+        asm volatile("int $0x3");
 
         viddump();
 }

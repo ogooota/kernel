@@ -50,7 +50,11 @@ int vsprintf(char *out, const char *fmt, va_list args)
                 case 'd':
                 {
                         int i = va_arg(args, int);
-                        itoa(str++, i);
+                        itoa(str, i);
+                        while (*str)
+                        {
+                                str++;
+                        }
                 } break;
 
                 case 'x':
@@ -84,7 +88,7 @@ int vsprintf(char *out, const char *fmt, va_list args)
                         itox(buf + 2, x);
 
                         char *p = buf;
-                        
+
                         while (*p)
                         {
                                 *str++ = (*p >= 97 && *p <= 122) ? UPPERCASE(*p++) : *p++;
