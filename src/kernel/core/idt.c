@@ -42,24 +42,10 @@ void idt_init()
         idt_load(&pidt);
 }
 
-static void panic()
-{
-        printk("\nKERNEL PANIC\n");
-
-        viddump();
-
-        while (1)
-        {
-                asm volatile("hlt");
-        }
-}
-
 void print_exception(struct regs *registers)
 {
-        printk("INTERRUPTION NUMBER: %d\n"
-               "ERROR CODE:          %d\n",
+        printk("INT:      %d\n"
+               "ERR_CODE: %d\n",
                registers->intno,
-               registers->errcode ? registers->errcode : 0);
-
-        panic();
+               registers->errcode);
 }

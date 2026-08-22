@@ -75,8 +75,6 @@ global isr29
 global isr30
 global isr31
 
-extern isr_common_stub
-
 ;;
 ;; Divide Error
 ;;
@@ -340,29 +338,96 @@ isr31:
 extern print_exception
 
 isr_common_stub:
+        ;;
+        ;; É importante ressaltar
+        ;; que neste ponto do código,
+        ;; a CPU já salvou automaticamente
+        ;; ss, useresp, eflags, cs, eip.
+        ;;
+        ;;
+        ;;
+        ;; Logo antes da chamada desta
+        ;; função, foram salvos
+        ;; o código de erro, e o
+        ;; número da interrupção,
+        ;; respectivamente.
+        ;;
+        ;;
+        ;;
+        ;; Falta salvar o contexto
+        ;; dos registradores, com
+        ;; 'pusha', e os segmentos
+        ;; ds, es, fs, gs,
+        ;; respectivamente.
+        ;;
+        ;;
+        ;;
+        ;; Salva os registradores
+        ;; nesta ordem:
+        ;;      eax, ecx, edx, ebx
+        ;;      esp, ebp, esi, edi
+        ;;
         pusha
         push ds
         push es
         push fs
         push gs
 
+        ;;
+        ;; A partir daqui, é transferido
+        ;; o segmento de dados do kernel.
+        ;; (0x10 é a entrada número 2 da
+        ;; GDT, que corresponde ao descritor
+        ;; do segmento de dados do kernel)
+        ;;
         mov ax, 0x10
         mov ds, ax
         mov es, ax
         mov fs, ax
         mov gs, ax
 
+        ;;
+        ;; Então é feita a
+        ;; chamada para a função de
+        ;; tratamento.
+        ;;
+        ;; Neste ponto, apenas
+        ;; mostro a interrupção
+        ;; na tela.
+        ;;
         mov eax, esp
         push eax
-
         call print_exception
 
+        ;;
+        ;; Após tratar a interrupção,
+        ;; restaura-se o contexto em que
+        ;; o programa se encontrava,
+        ;; e segue-se normalmente.
+        ;;
         pop eax
         pop gs
         pop fs
         pop es
         pop ds
+
+        ;;
+        ;; Restaura os valores contidos
+        ;; nos registradores.
+        ;;
         popa
+
+        ;;
+        ;; Remove o código de erro
+        ;; e número de interrupção
+        ;; da stack.
+        ;;
         add esp, 8
+
+        ;;
+        ;; Habilita interrupções de novo.
+        ;;
+        sti
+
         iret
 
