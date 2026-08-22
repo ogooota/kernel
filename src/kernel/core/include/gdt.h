@@ -128,22 +128,13 @@ struct gdt
         uint8              ds_amt;
 } _packed;
 
-struct gdtr
+struct gdtptr
 {
         uint16 limit;
         uint32 base;
 } _packed;
 
-void gdt_dsadd
-(struct gdt *table,
- uint8       n,
- uint32      base,
- uint32      lim,
- uint8       access,
- uint8       flags);
-
-void gdt_init(struct gdt *table);
-
-extern void gdt_load();
+void gdt_init();
+void gdt_show_desc(int n);
 
 #endif

@@ -2,9 +2,10 @@
 
 #include <kernel/utils/print.h>
 
-struct gdtr gdtr;
+struct gdt    gdt;
+struct gdtptr pgdt;
 
-void gdt_dsadd
+static void gdt_dsadd
 (struct gdt *table,
  uint8       n,
  uint32      base,
@@ -32,36 +33,55 @@ void gdt_dsadd
         ds->access_byte = access;
 }
 
-void gdt_init(struct gdt *table)
-{
-        if (table == NULL)
-        {
-                printk("null table\n");
-                return;
-        }
+extern void gdt_load();
 
+void gdt_init()
+{
         uint8 i = 0;
 
         /**
          * Primeiro é nulo
          */
-        gdt_dsadd(table, i++, 0, 0, 0, 0);
+        gdt_dsadd(&gdt, i++, 0, 0, 0, 0);
 
         /**
          * Segmento de código e dados do kernel
          */
-        gdt_dsadd(table, i++, 0, 0xFFFFF, KERNEL_CS_ACCESS, 0xC);
-        gdt_dsadd(table, i++, 0, 0xFFFFF, KERNEL_DS_ACCESS, 0xC);
+        gdt_dsadd(&gdt, i++, 0, 0xFFFFF, KERNEL_CS_ACCESS, 0xC);
+        gdt_dsadd(&gdt, i++, 0, 0xFFFFF, KERNEL_DS_ACCESS, 0xC);
 
         /**
          * Segmento de código e dados do usuário
          */
-        gdt_dsadd(table, i++, 0, 0xFFFFF, USER_CS_ACCESS, 0xC);
-        gdt_dsadd(table, i++, 0, 0xFFFFF, USER_DS_ACCESS, 0xC);
+        gdt_dsadd(&gdt, i++, 0, 0xFFFFF, USER_CS_ACCESS, 0xC);
+        gdt_dsadd(&gdt, i++, 0, 0xFFFFF, USER_DS_ACCESS, 0xC);
 
-        table->ds_amt = i;
+        gdt.ds_amt = i;
 
-        gdtr.limit = (sizeof(struct gdt_segdesc) * i) - 1;
-        gdtr.base  = (uint32)&table->ds;
+        pgdt.limit = (sizeof(struct gdt_segdesc) * MAXDS) - 1;
+        pgdt.base  = (uint32)&gdt.ds;
+
+        gdt_load();
 }
 
+void gdt_show_desc(int n)
+{
+        struct gdt_segdesc curr = gdt.ds[n];
+
+        printk("Descriptor number %d:\n", n);
+
+        printk("lim_0_15:    %x\n"
+               "base_16_31:  %x\n"
+               "base_32_39:  %x\n"
+               "access_byte: %x\n"
+               "lim_48_51:   %x\n"
+               "flags_52_55: %x\n"
+               "base_56_63:  %x\n\n",
+               curr.lim_0_15,
+               curr.base_16_31,
+               curr.base_32_39,
+               curr.access_byte,
+               curr.lim_48_51,
+               curr.flags_52_55,
+               curr.base_56_63);
+}

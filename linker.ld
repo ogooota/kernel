@@ -6,6 +6,19 @@ SECTIONS
 
         PROVIDE(__kernel_start = .);
 
+        /**
+         * Garantindo que a seção
+         * .multiboot vem antes de
+         * qualquer outra coisa,
+         * para evitar o erro 13 do
+         * GRUB de não encontrar o
+         * formato correto de ELF
+         */
+        .multiboot ALIGN (4K) :
+        {
+                *(.multiboot)
+        }
+
         .text ALIGN (4K) :
         {
                 *(.text)

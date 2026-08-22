@@ -12,7 +12,7 @@ ASM_SOURCE := $(shell find src -type f -name "*.s")
 C_OBJECTS   := $(patsubst %.c, $(BUILD_DIR)/%.o, $(C_SOURCE))
 ASM_OBJECTS := $(patsubst %.s, $(BUILD_DIR)/%.o, $(ASM_SOURCE))
 
-all: $(BIN_DIR)/kernel.elf
+all: clean $(BIN_DIR)/kernel.elf
 
 $(BIN_DIR)/kernel.elf: $(C_OBJECTS) $(ASM_OBJECTS)
 	@mkdir -p $(dir $@)
@@ -39,7 +39,7 @@ clean:
 # GENERIC
 $(BUILD_DIR)/%.o: %.s
 	@mkdir -p $(dir $@)
-	nasm -f elf $< -o $@
+	nasm -f elf32 $< -o $@
 
 $(BUILD_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
