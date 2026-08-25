@@ -2,6 +2,13 @@
 
 void itoa(char *out, int n)
 {
+        if (n == 0)
+        {
+                out[0] = '0';
+                out[1] = 0;
+                return;
+        }
+
         int size = 0;
         int i    = 0;
         char rev[10];
@@ -38,7 +45,7 @@ void itox(char *out, int n)
 {
         int i, j;
         for (i = 28, j = 0;
-             i >= 0; 
+             i >= 0;
              i -= 4, j++)
         {
                 int nib = (n >> i) & 0x0F;
@@ -46,7 +53,7 @@ void itox(char *out, int n)
                 {
                         out[j] = hex[nib - 10];
                 }
-                else 
+                else
                 {
                         out[j] = nib + '0';
                 }

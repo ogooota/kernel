@@ -2,15 +2,17 @@
 #include <kernel/utils/print.h>
 #include <kernel/core/include/gdt.h>
 #include <kernel/core/include/idt.h>
+#include <kernel/core/include/irq.h>
 
 void kinit(void)
 {
         vidinit();
         gdt_init();
-        idt_init();
 
-        // asm volatile("ud2");
-        asm volatile("int $0x3");
+        idt_init();
+        irq_init();
+
+        asm volatile("int $0x28");
 }
 
 void kmain(void)

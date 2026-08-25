@@ -33,7 +33,6 @@ set_idt_gate
 
 void idt_init()
 {
-
         pidt.limit = (sizeof(struct idt_entry_gate) * MAXENTRIES) - 1;
         pidt.base  = (uint32)&idt_entries;
 

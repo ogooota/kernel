@@ -31,7 +31,7 @@ os.iso: $(BIN_DIR)/kernel.elf
 		    iso
 
 run: os.iso
-	qemu-system-x86_64 -boot d -cdrom os.iso
+	qemu-system-x86_64 -d int -no-reboot -boot d -cdrom os.iso
 
 clean:
 	rm -rf *.o $(BIN_DIR) $(BUILD_DIR)

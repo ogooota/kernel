@@ -163,7 +163,7 @@ isr9:
 ;;
 isr10:
         cli
-        push byte 0xA
+        push byte 10
         jmp isr_common_stub
 ;;
 ;; Segment Not Present
@@ -171,7 +171,7 @@ isr10:
 ;;
 isr11:
         cli
-        push byte 0xB
+        push byte 11
         jmp isr_common_stub
 
 ;;
@@ -180,7 +180,7 @@ isr11:
 ;;
 isr12:
         cli
-        push byte 0xC
+        push byte 12
         jmp isr_common_stub
 ;;
 ;; General Protection
@@ -188,7 +188,7 @@ isr12:
 ;;
 isr13:
         cli
-        push byte 0xD
+        push byte 13
         jmp isr_common_stub
 ;;
 ;; Page Fault
@@ -196,7 +196,7 @@ isr13:
 ;;
 isr14:
         cli
-        push byte 0xE
+        push byte 14
         jmp isr_common_stub
 ;;
 ;; Reservado. Não utilizar
@@ -204,7 +204,7 @@ isr14:
 isr15:
         cli
         push byte 0
-        push byte 0xF
+        push byte 15
         jmp isr_common_stub
 ;;
 ;; Floating-Point Error
@@ -212,7 +212,7 @@ isr15:
 isr16:
         cli
         push byte 0
-        push byte 0x10
+        push byte 16
         jmp isr_common_stub
 ;;
 ;; Alignment Check
@@ -220,7 +220,7 @@ isr16:
 ;;
 isr17:
         cli
-        push byte 0x11
+        push byte 17
         jmp isr_common_stub
 ;;
 ;; Machine Check
@@ -228,7 +228,7 @@ isr17:
 isr18:
         cli
         push byte 0
-        push byte 0x12
+        push byte 18
         jmp isr_common_stub
 ;;
 ;; SIMD Floating-Point Exception
@@ -236,7 +236,7 @@ isr18:
 isr19:
         cli
         push byte 0
-        push byte 0x13
+        push byte 19
         jmp isr_common_stub
 ;;
 ;; Virtualization Exception
@@ -244,7 +244,7 @@ isr19:
 isr20:
         cli
         push byte 0
-        push byte 0x14
+        push byte 20
         jmp isr_common_stub
 ;;
 ;; Control Protection
@@ -252,7 +252,7 @@ isr20:
 ;;
 isr21:
         cli
-        push byte 0x15
+        push byte 21
         jmp isr_common_stub
 ;;
 ;; Reservado. Não utilizar.
@@ -260,7 +260,7 @@ isr21:
 isr22:
         cli
         push byte 0
-        push byte 0x16
+        push byte 22
         jmp isr_common_stub
 ;;
 ;; Reservado. Não utilizar.
@@ -268,7 +268,7 @@ isr22:
 isr23:
         cli
         push byte 0
-        push byte 0x17
+        push byte 23
         jmp isr_common_stub
 ;;
 ;; Reservado. Não utilizar.
@@ -276,7 +276,7 @@ isr23:
 isr24:
         cli
         push byte 0
-        push byte 0x18
+        push byte 24
         jmp isr_common_stub
 ;;
 ;; Reservado. Não utilizar.
@@ -284,7 +284,7 @@ isr24:
 isr25:
         cli
         push byte 0
-        push byte 0x19
+        push byte 25
         jmp isr_common_stub
 ;;
 ;; Reservado. Não utilizar.
@@ -292,7 +292,7 @@ isr25:
 isr26:
         cli
         push byte 0
-        push byte 0x1A
+        push byte 26
         jmp isr_common_stub
 ;;
 ;; Reservado. Não utilizar.
@@ -300,7 +300,7 @@ isr26:
 isr27:
         cli
         push byte 0
-        push byte 0x1B
+        push byte 27
         jmp isr_common_stub
 ;;
 ;; Reservado. Não utilizar.
@@ -308,7 +308,7 @@ isr27:
 isr28:
         cli
         push byte 0
-        push byte 0x1C
+        push byte 28
         jmp isr_common_stub
 ;;
 ;; Reservado. Não utilizar.
@@ -316,7 +316,7 @@ isr28:
 isr29:
         cli
         push byte 0
-        push byte 0x1D
+        push byte 29
         jmp isr_common_stub
 ;;
 ;; Reservado. Não utilizar.
@@ -324,7 +324,7 @@ isr29:
 isr30:
         cli
         push byte 0
-        push byte 0x1E
+        push byte 30
         jmp isr_common_stub
 ;;
 ;; Reservado. Não utilizar.
@@ -332,7 +332,7 @@ isr30:
 isr31:
         cli
         push byte 0
-        push byte 0x1F
+        push byte 31
         jmp isr_common_stub
 
 extern print_exception
@@ -424,10 +424,131 @@ isr_common_stub:
         ;;
         add esp, 8
 
-        ;;
-        ;; Habilita interrupções de novo.
-        ;;
-        sti
-
         iret
 
+
+;;
+;; IRQs
+;;
+global irq0
+global irq1
+global irq2
+global irq3
+global irq4
+global irq5
+global irq6
+global irq7
+global irq8
+global irq9
+global irq10
+global irq11
+global irq12
+global irq13
+global irq14
+global irq15
+
+irq0:
+        cli
+        push byte 0
+        push byte 32
+        jmp irq_common_stub
+irq1:
+        cli
+        push byte 0
+        push byte 33
+        jmp irq_common_stub
+irq2:
+        cli
+        push byte 0
+        push byte 34
+        jmp irq_common_stub
+irq3:
+        cli
+        push byte 0
+        push byte 35
+        jmp irq_common_stub
+irq4:
+        cli
+        push byte 0
+        push byte 36
+        jmp irq_common_stub
+irq5:
+        cli
+        push byte 0
+        push byte 37
+        jmp irq_common_stub
+irq6:
+        cli
+        push byte 0
+        push byte 38
+        jmp irq_common_stub
+irq7:
+        cli
+        push byte 0
+        push byte 39
+        jmp irq_common_stub
+irq8:
+        cli
+        push byte 0
+        push byte 40
+        jmp irq_common_stub
+irq9:
+        cli
+        push byte 0
+        push byte 41
+        jmp irq_common_stub
+irq10:
+        cli
+        push byte 0
+        push byte 42
+        jmp irq_common_stub
+irq11:
+        cli
+        push byte 0
+        push byte 43
+        jmp irq_common_stub
+irq12:
+        cli
+        push byte 0
+        push byte 44
+        jmp irq_common_stub
+irq13:
+        cli
+        push byte 0
+        push byte 45
+        jmp irq_common_stub
+irq14:
+        cli
+        push byte 0
+        push byte 46
+        jmp irq_common_stub
+irq15:
+        cli
+        push byte 0
+        push byte 47
+        jmp irq_common_stub
+
+extern irq_handler
+
+irq_common_stub:
+        pusha
+        push ds
+        push es
+        push fs
+        push gs
+
+        mov eax, esp
+        push eax
+        call irq_handler
+
+        pop eax
+        pop gs
+        pop fs
+        pop es
+        pop ds
+
+        popa
+
+        add esp, 8
+
+        iret
