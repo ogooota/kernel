@@ -12,7 +12,20 @@ void kinit(void)
         idt_init();
         irq_init();
 
-        asm volatile("int $0x28");
+        /**
+         * IMPORTANTE!
+         *      Aqui deve-se tratar a interrupção.
+         *      Devido a algumas interrupções serem classificadas
+         *      como 'fault', EIP não avança quando é salvo na stack,
+         *      é apenas salvo o valor atual de EIP, e por isso,
+         *      acaba-se travando o sistema, porque assim que a
+         *      interrupção acaba, o kernel lê de novo a
+         *      instrução que a causou, fazendo um loop infinito.
+         *
+         *      Tenho que achar uma forma de tratar essas interrupções,
+         *      não posso apenas fingir que não existem.
+         */
+        // asm volatile("int $0xa");
 }
 
 void kmain(void)
