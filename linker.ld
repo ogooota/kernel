@@ -3,8 +3,9 @@ ENTRY(loader)
 SECTIONS
 {
         . = 0x00100000;
+	
 
-        PROVIDE(__kernel_start = .);
+        PROVIDE(__kernel_pstart = .);
 
         /**
          * Garantindo que a seção
@@ -14,39 +15,31 @@ SECTIONS
          * GRUB de não encontrar o
          * formato correto de ELF
          */
-        .multiboot ALIGN (4K) :
-        {
+        .multiboot ALIGN (4K) :         {
                 *(.multiboot)
         }
 
-        .text ALIGN (4K) :
-        {
+        .text ALIGN (4K) :         {
                 *(.text)
         }
 
-        PROVIDE(etext = .);
-
-        .rodata ALIGN (4K) :
+        .rodata ALIGN (4K) : 
         {
                 *(.rodata*)
         }
 
-        PROVIDE(data = .);
-
-        .data ALIGN (4K) :
+        .data ALIGN (4K) : 
         {
                 *(.data)
         }
 
-        PROVIDE(edata = .);
-
-        .bss ALIGN (4K) :
+        .bss ALIGN (4K) : 
         {
                 *(COMMON*)
                 *(.bss)
         }
 
-        PROVIDE(__kernel_end = .);
+        PROVIDE(__kernel_pend = .);
 
         /DISCARD/ :
         {

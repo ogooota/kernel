@@ -1,7 +1,13 @@
 #ifndef __MMU_H
 #define __MMU_H
 
-extern const unsigned int __kernel_start;
-extern const unsigned int __kernel_end;
+#include "kdefs.h"
+
+/**
+ * Definido no linker.
+ * Ver linker.ld
+ * */
+extern uint32 __kernel_pstart;
+extern uint32 __kernel_pend;
 
 #endif
