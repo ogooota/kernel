@@ -134,7 +134,7 @@ struct gdtptr
         uint32 base;
 } _packed;
 
-void gdt_init();
+void gdt_init(uint32 sbss);
 void gdt_show_desc(int n);
 
 #endif

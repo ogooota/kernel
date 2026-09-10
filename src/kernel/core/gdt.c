@@ -1,7 +1,11 @@
-#include "include/gdt.h"
-
 #include <kernel/utils/print.h>
 
+#include "include/gdt.h"
+
+#include "include/mem.h"
+#include "include/tss.h"
+
+struct tss    tss;
 struct gdt    gdt;
 struct gdtptr pgdt;
 
@@ -35,28 +39,43 @@ static void gdt_dsadd
 
 extern void gdt_load();
 
-void gdt_init()
+void gdt_init(uint32 sbss)
 {
-        uint8 i = 0;
-
         /**
          * Primeiro é nulo
          */
-        gdt_dsadd(&gdt, i++, 0, 0, 0, 0);
+        gdt_dsadd(&gdt, 0, 0, 0, 0, 0);
 
         /**
          * Segmento de código e dados do kernel
          */
-        gdt_dsadd(&gdt, i++, 0, 0xFFFFF, KERNEL_CS_ACCESS, 0xC);
-        gdt_dsadd(&gdt, i++, 0, 0xFFFFF, KERNEL_DS_ACCESS, 0xC);
+        gdt_dsadd(&gdt, 1, 0, 0xFFFFF, KERNEL_CS_ACCESS, 0xC);
+        gdt_dsadd(&gdt, 2, 0, 0xFFFFF, KERNEL_DS_ACCESS, 0xC);
 
         /**
          * Segmento de código e dados do usuário
          */
-        gdt_dsadd(&gdt, i++, 0, 0xFFFFF, USER_CS_ACCESS, 0xC);
-        gdt_dsadd(&gdt, i++, 0, 0xFFFFF, USER_DS_ACCESS, 0xC);
+        gdt_dsadd(&gdt, 3, 0, 0xFFFFF, USER_CS_ACCESS, 0xC);
+        gdt_dsadd(&gdt, 4, 0, 0xFFFFF, USER_DS_ACCESS, 0xC);
 
-        gdt.ds_amt = i;
+	/**
+	 * TSS 
+	 */
+	gdt_dsadd(&gdt, 5, (uint32)&tss, sizeof(tss), 0xE9, 0);
+
+	memsetb((uint8 *)&tss, 0, sizeof(tss));
+
+	tss.iobp = (uint16)sizeof(tss);
+	tss.esp0 = sbss;
+	tss.ss0  = 0x10;
+	tss.cs   = 0;
+	tss.ss   = 0x13;
+	tss.ds   = 0x13;
+	tss.es   = 0x13;
+	tss.fs   = 0x13;
+	tss.gs   = 0x13;
+
+        gdt.ds_amt = 6;
 
         pgdt.limit = (sizeof(struct gdt_segdesc) * MAXDS) - 1;
         pgdt.base  = (uint32)&gdt.ds;

@@ -35,6 +35,7 @@ SECTIONS
 
         .bss ALIGN (4K) : 
         {
+                sbss = .;
                 *(COMMON*)
                 *(.bss)
         }

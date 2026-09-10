@@ -34,8 +34,9 @@ align 4
 section .text
 
 loader:
-        mov esp, kernel_stack + KERNEL_STACK_SIZE
+        mov esp, kernel_stack
 
+	push kernel_stack
 	push eax	;; Isso é o MULTIBOOT_BOOTLOADER_MAGIC
 	push ebx	;; Isso é a estrutura multiboot_info
 
@@ -46,4 +47,5 @@ loader:
 
 section .bss
 align 4
-kernel_stack: resb KERNEL_STACK_SIZE
+resb KERNEL_STACK_SIZE
+kernel_stack:

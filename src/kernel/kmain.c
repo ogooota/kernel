@@ -14,7 +14,7 @@ const char *mbtype[] = {
         [5] = "BADRAM"
 };
 
-static void kinit(struct multiboot_info *mbi, uint32 magic) 
+static void kinit(struct multiboot_info *mbi, uint32 magic, uint32 sbss) 
 {
 	uint8 wrong_params = 0;
 
@@ -67,7 +67,7 @@ static void kinit(struct multiboot_info *mbi, uint32 magic)
 		}
 	}
 
-	gdt_init();
+	gdt_init(sbss);
 
 	idt_init();
 	irq_init();
@@ -92,9 +92,12 @@ static void kinit(struct multiboot_info *mbi, uint32 magic)
 
 void kmain
 (struct multiboot_info *mbi, 
- uint32 		magic) 
+ uint32 		magic,
+ uint32			sbss) 
 {
-	kinit(mbi, magic);
+	kinit(mbi, magic, sbss);
+
+	printk("sbss: %X\n", sbss);
 
 	viddump();
 }
